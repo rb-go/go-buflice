@@ -1,0 +1,2 @@
+# buflice
+Golang Buffered slice
