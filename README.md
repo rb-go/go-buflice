@@ -84,3 +84,11 @@ func main() {
 
 }
 ```
+
+Will print:
+
+```bash
+2019/09/03 14:56:28 [Record #1 Record #2 Record #3 Record #4 Record #5 Record #6]
+2019/09/03 14:56:28 [Record #7 Record #8 Record #9 Record #10]
+2019/09/03 14:56:28 Finished flushProcessor
+```
