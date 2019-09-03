@@ -1,0 +1,44 @@
+language: go
+
+
+go:
+  - 1.11.x
+  - 1.12.x
+  - 1.13.x
+  - tip
+
+
+os:
+  - linux
+
+
+matrix:
+  allow_failures:
+    - go: tip
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+
+before_install:
+  - export GO111MODULE="on"
+
+
+install:
+  - go get -u
+  - go get -u golang.org/x/lint/golint
+  - go get -u golang.org/x/tools/cmd/goimports
+  - go get -u golang.org/x/tools/cmd/cover
+  - go get -u github.com/mattn/goveralls
+  - go get -u github.com/stretchr/testify/assert
+
+
+script:
+  - go vet ./...
+  - diff <(goimports -d $(find . -type f -name '*.go' -not -path "*_easyjson*")) <(printf "")
+  - diff <(golint ./...) <(printf "")
+  - go test -v -covermode=count -coverprofile=coverage.out
+  - go test -race
+  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
