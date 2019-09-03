@@ -1,10 +1,18 @@
+# This is a weird way of telling Travis to use the fast container-based test
+# runner instead of the slow VM-based runner.
+sudo: false
+
+
 language: go
 
-
+# Only the last two Go releases are supported by the Go team with security
+# updates. Any older versions be considered deprecated. Don't bother testing
+# with them.
 go:
   - 1.11.x
   - 1.12.x
   - 1.13.x
+  - 1.x
   - tip
 
 
@@ -16,6 +24,8 @@ matrix:
   allow_failures:
     - go: tip
     - go: 1.13.x
+    - go: 1.x
+
 
 notifications:
   email:
@@ -23,23 +33,25 @@ notifications:
     on_failure: always
 
 
+# Only clone the most recent commit.
+git:
+  depth: 1
+
+
 before_install:
   - export GO111MODULE="on"
 
 
 install:
-  - go get -u
-  - go get -u golang.org/x/lint/golint
-  - go get -u golang.org/x/tools/cmd/goimports
-  - go get -u golang.org/x/tools/cmd/cover
-  - go get -u github.com/mattn/goveralls
-  - go get -u github.com/stretchr/testify/assert
+  - go mod download
+  - go get github.com/golangci/golangci-lint/cmd/golangci-lint
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
 
 
 script:
   - go vet ./...
-  - diff <(goimports -d $(find . -type f -name '*.go' -not -path "*_easyjson*")) <(printf "")
-  - diff <(golint ./...) <(printf "")
+  - golangci-lint run
   - go test -v -covermode=count -coverprofile=coverage.out
   - go test -race
   - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
