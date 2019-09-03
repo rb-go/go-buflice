@@ -92,3 +92,11 @@ Will print:
 2019/09/03 14:56:28 [Record #7 Record #8 Record #9 Record #10]
 2019/09/03 14:56:28 Finished flushProcessor
 ```
+
+
+## Credits
+
+Thanks to:
+
+- Everyone that [gave this repo a star](https://github.com/riftbit/buflice/stargazers) :star: - *you keep me motivated* :slightly_smiling_face: 
+- [Contributors](https://github.com/riftbit/buflice/graphs/contributors) that submitted useful [pull-requests](https://github.com/riftbit/buflice/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+is%3Amerged) or opened good issues with suggestions or a detailed bug report.
