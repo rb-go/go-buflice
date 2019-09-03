@@ -25,7 +25,7 @@ func (bs *Buflice) Flush() {
 // Close is for close time ticker, clean slice data and slice position
 func (bs *Buflice) Close() error {
 	bs.mu.Lock()
-	bs.mu.Unlock()
+	defer bs.mu.Unlock()
 	bs.stopTicker()
 	bs.currentPos = 0
 	bs.slice = make([]interface{}, bs.maxSize)
