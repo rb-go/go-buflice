@@ -17,7 +17,7 @@ you need to accumulate data from jobs for batch processing in database.
 ## Installation
 
 ```bash
-go get -u github.com/riftbit/buflice
+go get -u github.com/rb-pkg/buflice
 ```
 
 ## Example (dirty example)
