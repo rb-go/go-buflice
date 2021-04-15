@@ -9,9 +9,11 @@ language: go
 # updates. Any older versions be considered deprecated. Don't bother testing
 # with them.
 go:
-  - 1.11.x
   - 1.12.x
   - 1.13.x
+  - 1.14.x
+  - 1.15.x
+  - 1.16.x
   - 1.x
   - tip
 
@@ -23,8 +25,6 @@ os:
 matrix:
   allow_failures:
     - go: tip
-    - go: 1.13.x
-    - go: 1.x
 
 
 notifications:

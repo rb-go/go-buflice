@@ -7,12 +7,11 @@ import (
 
 // Buflice main struct that contains configs and methods
 type Buflice struct {
-	maxSize        int
-	maxDuration    time.Duration
-	mu             sync.Mutex
-	currentPos     int
-	slice          []interface{}
-	ticker         *time.Ticker
-	tickerChanDone chan bool
-	flushChan      chan []interface{}
+	mu            sync.Mutex
+	wgProc        sync.WaitGroup
+	flushDuration time.Duration
+	slice         []interface{}
+	ticker        *time.Ticker
+	chDone        chan struct{}
+	flushChan     chan []interface{}
 }

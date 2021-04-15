@@ -8,11 +8,11 @@ you need to accumulate data from jobs for batch processing in database.
 
 [Website](https://riftbit.com) | [Blog](https://ergoz.ru)
 
-[![license](https://img.shields.io/github/license/riftbit/buflice.svg)](LICENSE)
-[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/riftbit/buflice)
-[![Coverage Status](https://coveralls.io/repos/github/riftbit/buflice/badge.svg?branch=master)](https://coveralls.io/github/riftbit/buflice?branch=master)
-[![Build Status](https://travis-ci.org/riftbit/buflice.svg?branch=master)](https://travis-ci.org/riftbit/buflice)
-[![Go Report Card](https://goreportcard.com/badge/github.com/riftbit/buflice)](https://goreportcard.com/report/github.com/riftbit/buflice)
+[![license](https://img.shields.io/github/license/rb-pkg/buflice.svg)](LICENSE)
+[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/rb-pkg/buflice)
+[![Coverage Status](https://coveralls.io/repos/github/rb-pkg/buflice/badge.svg?branch=master)](https://coveralls.io/github/rb-pkg/buflice?branch=master)
+[![Build Status](https://travis-ci.org/rb-pkg/buflice.svg?branch=master)](https://travis-ci.org/rb-pkg/buflice)
+[![Go Report Card](https://goreportcard.com/badge/github.com/rb-pkg/buflice)](https://goreportcard.com/report/github.com/rb-pkg/buflice)
 
 ## Installation
 
@@ -20,33 +20,31 @@ you need to accumulate data from jobs for batch processing in database.
 go get -u github.com/riftbit/buflice
 ```
 
-## Example
+## Example (dirty example)
 
 ```go
-
 package main
 
 import (
 	"log"
 	"sync"
-	"testing"
 	"time"
 
-	"github.com/riftbit/buflice"
+	"github.com/rb-pkg/buflice"
 )
 
-var bfl *buflice.Buflice
-var chDone chan bool
-var chFlush chan []interface{}
-var wgWait sync.WaitGroup
+type Book struct {
+	Author string
+}
 
-func flushProcessor() {
+func flushProcessor(chFlush chan []interface{}, chDone chan struct{}, wait *sync.WaitGroup) {
 	for {
 		select {
 		case data := <-chFlush:
-			log.Println(data)
+			wait.Add(1)
+			log.Printf("%+v", data)
+			wait.Done()
 		case <-chDone:
-			wgWait.Done()
 			log.Println("Finished flushProcessor")
 			return
 		}
@@ -54,33 +52,34 @@ func flushProcessor() {
 }
 
 func main() {
-	chDone = make(chan bool)
-	chFlush = make(chan []interface{})
+	chFlush := make(chan []interface{})
+	chDone := make(chan struct{})
+	wait := sync.WaitGroup{}
 
-	wgWait.Add(1)
+	bfl := buflice.NewBuflice(10, 1000*time.Millisecond, chFlush)
 
-	bfl = buflice.NewBuflice(6, 5*time.Second, chFlush)
-	go flushProcessor()
+	go flushProcessor(chFlush, chDone, &wait)
+	bfl.Start()
 
-	bfl.Add("Record #1")
-	bfl.Add("Record #2")
-	bfl.Add("Record #3")
-	bfl.Add("Record #4")
-	bfl.Add("Record #5")
-	bfl.Add("Record #6")
-	bfl.Add("Record #7")
-	bfl.Add("Record #8")
-	bfl.Add("Record #9")
-	bfl.Add("Record #10")
-
-	bfl.Flush()
-
-    chDone <- true
-	wgWait.Wait()
+	bfl.Add(Book{Author: "Author #1"})
+	bfl.Add(Book{Author: "Author #2"})
+	bfl.Add(Book{Author: "Author #3"})
+	bfl.Add(Book{Author: "Author #4"})
+	bfl.Add(Book{Author: "Author #5"})
+	time.Sleep(1111 * time.Millisecond)
+	bfl.Add(Book{Author: "Author #6"})
+	bfl.Add(Book{Author: "Author #7"})
+	bfl.Add(Book{Author: "Author #8"})
+	bfl.Add(Book{Author: "Author #9"})
+	bfl.Add(Book{Author: "Author #10"})
+	
 	err := bfl.Close()
 	if err != nil {
 		log.Fatalln(err)
-	}
+    }
+
+	wait.Wait()
+	chDone <- struct{}{}
 
 }
 ```
