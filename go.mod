@@ -1,3 +1,3 @@
 module github.com/rb-pkg/buflice
 
-go 1.12
+go 1.16
