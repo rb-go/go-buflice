@@ -11,7 +11,7 @@ you need to accumulate data from jobs for batch processing in database.
 [![license](https://img.shields.io/github/license/rb-pkg/buflice.svg)](LICENSE)
 [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/rb-pkg/buflice)
 [![Coverage Status](https://coveralls.io/repos/github/rb-pkg/buflice/badge.svg?branch=master)](https://coveralls.io/github/rb-pkg/buflice?branch=master)
-[![Build Status](https://travis-ci.org/rb-pkg/buflice.svg?branch=master)](https://travis-ci.org/rb-pkg/buflice)
+[![Build Status](https://travis-ci.com/rb-pkg/buflice.svg?branch=master)](https://travis-ci.com/rb-pkg/buflice)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rb-pkg/buflice)](https://goreportcard.com/report/github.com/rb-pkg/buflice)
 
 ## Installation

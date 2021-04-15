@@ -40,7 +40,6 @@ func (bs *Buflice) flushReset() {
 	bs.flushChan <- sendSlice
 	bs.slice = bs.slice[:0]
 	bs.wgProc.Done()
-	return
 }
 
 // Add is for adding elements

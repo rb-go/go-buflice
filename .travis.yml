@@ -2,7 +2,6 @@
 # runner instead of the slow VM-based runner.
 sudo: false
 
-
 language: go
 
 # Only the last two Go releases are supported by the Go team with security
@@ -17,30 +16,24 @@ go:
   - 1.x
   - tip
 
-
 os:
   - linux
-
 
 matrix:
   allow_failures:
     - go: tip
-
 
 notifications:
   email:
     on_success: change
     on_failure: always
 
-
 # Only clone the most recent commit.
 git:
   depth: 1
 
-
 before_install:
   - export GO111MODULE="on"
-
 
 install:
   - go mod download
@@ -48,10 +41,9 @@ install:
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
 
-
 script:
   - go vet ./...
   - golangci-lint run
   - go test -v -covermode=count -coverprofile=coverage.out
   - go test -race
-  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - goveralls -coverprofile=coverage.out -service=travis-ci
