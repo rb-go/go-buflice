@@ -72,12 +72,14 @@ func (bs *Buflice) Close() error {
 	return nil
 }
 
+// GetCurrentLen function to get current batch size
 func (bs *Buflice) GetCurrentLen() int {
 	bs.mu.Lock()
 	defer bs.mu.Unlock()
 	return len(bs.slice)
 }
 
+// GetCap function to get max batch size
 func (bs *Buflice) GetCap() int {
 	bs.mu.Lock()
 	defer bs.mu.Unlock()
